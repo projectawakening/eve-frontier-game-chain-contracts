@@ -84,6 +84,14 @@ contract SmartCharacter is EveSystem {
     );
   }
 
+  function deleteCharacter(uint256 characterId) public hookable(characterId, _systemId()) {
+    uint256 classId = ClassConfig.getClassId(_namespace().classConfigTableId(), _systemId());
+    _smartObjectLib().removeEntityTag(characterId, classId); // do we need that one ?
+    IERC721Mintable(CharactersConstantsTable.getErc721Address((_namespace().charactersConstantsTableId()))).burn(
+      characterId
+    );
+  }
+
   function setCharClassId(uint256 classId) public hookable(uint256(ResourceId.unwrap(_systemId())), _systemId()) {
     ClassConfig.setClassId(_namespace().classConfigTableId(), _systemId(), classId);
   }
